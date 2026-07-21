@@ -2,33 +2,32 @@
 #include <avr/interrupt.h>
 
 void setup() {
-    // 1. Kill standard Arduino Timer0 interrupts (millis/micros) to ensure zero jitter
+
     cli();
 
-    // 2. Set PB0 (Q) and PB1 (E) as digital outputs
+    //  Set PB0 (Q) and PB1 (E) as digital outputs
     DDRB |= (1 << PB0) | (1 << PB1);
 
-    // 3. Continuous assembly clock engine
+
     asm volatile (
         "1:\n\t"
-        // --- State 1 (0°): Q=1, E=0 ---
-        "out %[port], %[s1]\n\t"  // 1 cycle
-        "nop\n\t"                 // 1 cycle
-        "nop\n\t"                 // 1 cycle  (Total: 3 cycles)
+      
+        "out %[port], %[s1]\n\t"  
+        "nop\n\t"                 
+        "nop\n\t"               
+      
+        "out %[port], %[s2]\n\t"  
+        "nop\n\t"                
+        "nop\n\t"                 
 
-        // --- State 2 (90°): Q=1, E=1 ---
-        "out %[port], %[s2]\n\t"  // 1 cycle
-        "nop\n\t"                 // 1 cycle
-        "nop\n\t"                 // 1 cycle  (Total: 3 cycles)
+      
+        "out %[port], %[s3]\n\t"  
+        "nop\n\t"                 
+        "nop\n\t"                 
 
-        // --- State 3 (180°): Q=0, E=1 ---
-        "out %[port], %[s3]\n\t"  // 1 cycle
-        "nop\n\t"                 // 1 cycle
-        "nop\n\t"                 // 1 cycle  (Total: 3 cycles)
-
-        // --- State 0 (270°): Q=0, E=0 ---
-        "out %[port], %[s0]\n\t"  // 1 cycle
-        "rjmp 1b\n\t"             // 2 cycles (Total: 3 cycles)
+       
+        "out %[port], %[s0]\n\t"  
+        "rjmp 1b\n\t"             
         :
         : [port] "I" (_SFR_IO_ADDR(PORTB)),
           [s0]   "r" ((uint8_t)0x00),
@@ -41,5 +40,5 @@ void setup() {
 }
 
 void loop() {
-    // Unreachable: setup() never returns
+  
 }
