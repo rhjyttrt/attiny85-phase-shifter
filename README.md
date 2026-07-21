@@ -7,9 +7,9 @@ Hardware quadrature clock generator using ATtiny85. It can be used for processor
 * 90 degree phase shift with 50 percent duty cycle
 
 ## Files
-* main.c: C source code
-* attiny85-QE-MPU.ino: Arduino sketch
-* attiny85-QE-MPU.hex: Compiled hex file ready to burn
+* files/main.c: C source code
+* files/attiny85-QE-MPU.ino: Arduino sketch
+* files/attiny85-QE-MPU.hex: Compiled hex file ready to burn
 * pictures/salae-tiny-16mhz-6809.png: PulseView capture output
 * pictures/ide-options.png: Arduino IDE setup screen
 
