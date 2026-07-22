@@ -6,7 +6,7 @@ It accepts a 2 pin or 1 pin external crystal input and outputs two 50% duty cycl
 
 ## Clock Ratios & Implementation
 
-| Mode | Division Ratio | Implementation Method | Jitter | 8 MHz Clock | 12 MHz Crystal | 16 MHz Crystal |
+| Mode | Division Ratio | Implementation Method | 8 MHz Clock | 12 MHz Crystal | 16 MHz Crystal |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Divide-by-8** | F_out = F_clk / 8 | 1.0 MHz | 1.5 MHz | 2.0 MHz |
 | **Divide-by-12** | F_out = F_clk / 12 | 0.66 MHz | 1.0 MHz | 1.33 MHz |
