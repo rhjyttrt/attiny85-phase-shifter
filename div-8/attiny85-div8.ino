@@ -2,53 +2,17 @@
 #include <avr/interrupt.h>
 
 void setup() {
-    cli(); // Disable interrupts
+    cli();
 
-    // Disconnect Timer0 hardware PWM overrides from PB0 (OC0A) and PB1 (OC0B)
-    TCCR0A = 0;
-    TCCR0B = 0;
-
-    // Set PB0 (Q) and PB1 (E) as digital outputs
     DDRB |= (1 << PB0) | (1 << PB1);
 
-    // 4x Unrolled Divide-by-8 Loop
-    asm volatile (
-        "1:\n\t"
-        // --- Period 1 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t" "nop\n\t"
-
-        // --- Period 2 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t" "nop\n\t"
-
-        // --- Period 3 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t" "nop\n\t"
-
-        // --- Period 4 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t"
-        "rjmp 1b\n\t"
-        :
-        : [port] "I" (_SFR_IO_ADDR(PORTB)),
-          [s0]   "r" ((uint8_t)0x00),
-          [s1]   "r" ((uint8_t)0x01),
-          [s2]   "r" ((uint8_t)0x03),
-          [s3]   "r" ((uint8_t)0x02)
-    );
-
-    __builtin_unreachable();
+    // Configure Timer0 CTC Mode (Toggle PB0 and PB1 on compare match)
+    TCCR0A = (1 << COM0A0) | (1 << COM0B0) | (1 << WGM01);
+    OCR0A = 3;
+    OCR0B = 1;
+    TCCR0B = (1 << CS00);
 }
 
 void loop() {
-    // Execution never reaches here
+    // Empty - Hardware handles output timing
 }

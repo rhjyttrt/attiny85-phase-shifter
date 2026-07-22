@@ -3,19 +3,16 @@
 
 int main(void) {
     cli();
+    TCCR0A = 0;
+    TCCR0B = 0;
     DDRB |= (1 << PB0) | (1 << PB1);
 
+    // Exact 12-cycle software loop (3 cycles per state)
     asm volatile (
         "1:\n\t"
-        "out %[port], %[s1]\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "out %[port], %[s2]\n\t"
-        "nop\n\t"
-        "nop\n\t"
-        "out %[port], %[s3]\n\t"
-        "nop\n\t"
-        "nop\n\t"
+        "out %[port], %[s1]\n\t" "nop\n\t" "nop\n\t"
+        "out %[port], %[s2]\n\t" "nop\n\t" "nop\n\t"
+        "out %[port], %[s3]\n\t" "nop\n\t" "nop\n\t"
         "out %[port], %[s0]\n\t"
         "rjmp 1b\n\t"
         :

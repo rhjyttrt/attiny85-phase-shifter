@@ -2,32 +2,18 @@
 #include <avr/interrupt.h>
 
 void setup() {
-
     cli();
-
-    //  Set PB0 (Q) and PB1 (E) as digital outputs
+    TCCR0A = 0;
+    TCCR0B = 0;
     DDRB |= (1 << PB0) | (1 << PB1);
-
 
     asm volatile (
         "1:\n\t"
-      
-        "out %[port], %[s1]\n\t"  
-        "nop\n\t"                 
-        "nop\n\t"               
-      
-        "out %[port], %[s2]\n\t"  
-        "nop\n\t"                
-        "nop\n\t"                 
-
-      
-        "out %[port], %[s3]\n\t"  
-        "nop\n\t"                 
-        "nop\n\t"                 
-
-       
-        "out %[port], %[s0]\n\t"  
-        "rjmp 1b\n\t"             
+        "out %[port], %[s1]\n\t" "nop\n\t" "nop\n\t"
+        "out %[port], %[s2]\n\t" "nop\n\t" "nop\n\t"
+        "out %[port], %[s3]\n\t" "nop\n\t" "nop\n\t"
+        "out %[port], %[s0]\n\t"
+        "rjmp 1b\n\t"
         :
         : [port] "I" (_SFR_IO_ADDR(PORTB)),
           [s0]   "r" ((uint8_t)0x00),
@@ -39,6 +25,4 @@ void setup() {
     __builtin_unreachable();
 }
 
-void loop() {
-  
-}
+void loop() {}

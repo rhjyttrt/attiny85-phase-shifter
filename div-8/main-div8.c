@@ -2,51 +2,23 @@
 #include <avr/interrupt.h>
 
 int main(void) {
-    cli(); // Disable interrupts for exact cycle timing
+    cli(); // Disable interrupts
 
-    // Disconnect Timer0 hardware PWM overrides from PB0 and PB1
-    TCCR0A = 0;
-    TCCR0B = 0;
-
-    // Set PB0 (Q) and PB1 (E) as digital outputs
+    // Set PB0 (OC0A / Q) and PB1 (OC0B / E) as digital outputs
     DDRB |= (1 << PB0) | (1 << PB1);
 
-    // 4x Unrolled Divide-by-8 Loop
-    // States 1-15: 2 cycles each (1 cyc out + 1 cyc nop)
-    // State 16: 3 cycles (1 cyc out + 2 cyc rjmp)
-    asm volatile (
-        "1:\n\t"
-        // --- Period 1 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t" "nop\n\t"
+    // Timer0 CTC Mode: Toggle OC0A (PB0) and OC0B (PB1) on hardware compare match
+    TCCR0A = (1 << COM0A0) | (1 << COM0B0) | (1 << WGM01);
 
-        // --- Period 2 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t" "nop\n\t"
+    // OCR0A = 3 (Resets timer every 4 ticks)
+    // OCR0B = 1 (Toggles PB1 2 ticks apart from PB0 for 90-degree phase shift)
+    OCR0A = 3;
+    OCR0B = 1;
 
-        // --- Period 3 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t" "nop\n\t"
+    // Start Timer0 with clk/1 (no prescaler) -> Zero-jitter Divide-by-8
+    TCCR0B = (1 << CS00);
 
-        // --- Period 4 ---
-        "out %[port], %[s1]\n\t" "nop\n\t"
-        "out %[port], %[s2]\n\t" "nop\n\t"
-        "out %[port], %[s3]\n\t" "nop\n\t"
-        "out %[port], %[s0]\n\t"
-        "rjmp 1b\n\t"
-        :
-        : [port] "I" (_SFR_IO_ADDR(PORTB)),
-          [s0]   "r" ((uint8_t)0x00),
-          [s1]   "r" ((uint8_t)0x01),
-          [s2]   "r" ((uint8_t)0x03),
-          [s3]   "r" ((uint8_t)0x02)
-    );
-
-    __builtin_unreachable();
+    while (1) {
+        // Hardware toggles pins directly in silicon (Zero CPU overhead)
+    }
 }
