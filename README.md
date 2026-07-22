@@ -2,7 +2,16 @@
 
 Hardware quadrature clock generator built on the ATtiny85. 
 
-It accepts a 2-pin external crystal input, divides the frequency by 12, and outputs two 50% duty cycle clock signals (E and Q) shifted by 90 degrees. This output can be used for Motorola 6800 series MPUs and other processors requiring two-phase quadrature clocks.
+It accepts a 2-pin external crystal input and outputs two 50% duty cycle clock signals (E and Q) shifted by 90 degrees. This output can be used for Motorola 6800 series MPUs and other processors requiring two-phase quadrature clocks.
+
+This repository provides firmware implementations for both **Divide-by-8** and **Divide-by-12** clock ratios.
+
+## Clock Ratios & Frequencies
+
+| Mode | Division Ratio | 8 MHz Crystal / RC | 12 MHz Crystal | 16 MHz Crystal |
+| :--- | :--- | :--- | :--- | :--- |
+| **Divide-by-8** | F_out = F_crystal / 8 | 1.0 MHz | 1.5 MHz | 2.0 MHz |
+| **Divide-by-12** | F_out = F_crystal / 12 | 0.66 MHz | 1.0 MHz | 1.33 MHz |
 
 ## Pinout
 
@@ -19,14 +28,17 @@ It accepts a 2-pin external crystal input, divides the frequency by 12, and outp
 ## Repository Structure
 
     attiny85-phase-shifter/
-    ├── assets/                            # Documentation images and timing captures
+    ├── assets/                            # Images and timing captures
     │   ├── ide-options.png
     │   └── salae-tiny-16mhz-6809.png
-    ├── firmware/                          # Pre-compiled hex files ready to burn
-    │   └── attiny85-QE-MPU.hex
-    ├── src/                               # Source code
-    │   ├── main.c                         # Standalone AVR-C source
-    │   └── attiny85-QE-MPU.ino            # Arduino sketch
+    ├── div-8/                             # Divide-by-8 firmware & source
+    │   ├── attiny85-div8.hex
+    │   ├── attiny85-div8.ino
+    │   └── main-div8.c
+    ├── div-12/                            # Divide-by-12 firmware & source
+    │   ├── attiny85-div12.hex
+    │   ├── attiny85-div12.ino
+    │   └── main-div12.c
     ├── .gitignore
     ├── LICENSE
     └── README.md
