@@ -1,29 +1,32 @@
 # ATtiny85 Phase Clock Generator
 
-Hardware quadrature clock generator using ATtiny85. It can be used for processors like the Motorola 6809.
+Hardware quadrature clock generator built on the ATtiny85. 
 
-## Features
-* Generates Q and E phase clock signals
-* 90 degree phase shift with 50 percent duty cycle
-
-## Files
-* files/main.c: C source code
-* files/attiny85-QE-MPU.ino: Arduino sketch
-* files/attiny85-QE-MPU.hex: Compiled hex file ready to burn
-* pictures/salae-tiny-16mhz-6809.png: PulseView capture output
-* pictures/ide-options.png: Arduino IDE setup screen
+It accepts a 2-pin external crystal input, divides the frequency by 12, and outputs two 50% duty cycle clock signals (E and Q) shifted by 90 degrees. This output can be used for Motorola 6800 series MPUs and other processors requiring two-phase quadrature clocks.
 
 ## Pinout
-* Pin 2 (PB3): Crystal 1
-* Pin 3 (PB4): Crystal 2
-* Pin 5 (PB0): Q clock output
-* Pin 6 (PB1): E clock output
 
-## Fuses
-Set low fuse to 0xFF for external crystal without clock division.
+| ATtiny85 Pin | Port Pin | Function |
+| :--- | :--- | :--- |
+| Pin 2 | `PB3` | Crystal Input 1 |
+| Pin 3 | `PB4` | Crystal Input 2 |
+| Pin 5 | `PB0` | **Q** Clock Output |
+| Pin 6 | `PB1` | **E** Clock Output |
 
-## Waveform Capture
-![PulseView Capture](pictures/salae-tiny-16mhz-6809.png)
+## Timing Output
+![Logic Analyzer Output](assets/salae-tiny-16mhz-6809.png)
 
-## IDE Configuration
-![Arduino IDE Settings](pictures/ide-options.png)
+## Repository Structure
+
+    attiny85-phase-shifter/
+    ├── assets/                            # Documentation images and timing captures
+    │   ├── ide-options.png
+    │   └── salae-tiny-16mhz-6809.png
+    ├── firmware/                          # Pre-compiled hex files ready to burn
+    │   └── attiny85-QE-MPU.hex
+    ├── src/                               # Source code
+    │   ├── main.c                         # Standalone AVR-C source
+    │   └── attiny85-QE-MPU.ino            # Arduino sketch
+    ├── .gitignore
+    ├── LICENSE
+    └── README.md
