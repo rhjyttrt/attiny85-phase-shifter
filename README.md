@@ -6,10 +6,10 @@ It accepts a 1 pin or 2 pin external clock/crystal input and outputs two 50% dut
 
 ## Clock Ratios & Frequencies
 
-| Mode | Division Ratio | Implementation Method | 4 MHz Input | 8 MHz Input | 16 MHz Input | 20 MHz Input |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Divide by 8** | F_out = F_clk / 8 | Timer0 Hardware CTC | 0.50 MHz | 1.00 MHz | 2.00 MHz | 2.50 MHz |
-| **Divide by 12** | F_out = F_clk / 12 | Cycle Accurate ASM | 0.33 MHz | 0.67 MHz | 1.33 MHz | 1.67 MHz |
+| Mode | Division | 4 MHz Input | 8 MHz Input | 16 MHz Input | 20 MHz Input |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Divide by 8** | F_out = F_clk / 8 | 0.50 MHz | 1.00 MHz | 2.00 MHz | 2.50 MHz |
+| **Divide by 12** | F_out = F_clk / 12 | 0.33 MHz | 0.67 MHz | 1.33 MHz | 1.67 MHz |
 
 ## Pinout
 
